@@ -14,6 +14,7 @@ class _WebViewState extends State<WebView> {
     crossPlatform: InAppWebViewOptions(
       useShouldOverrideUrlLoading: true,
       mediaPlaybackRequiresUserGesture: false,
+      javaScriptEnabled: true,
     ),
     android: AndroidInAppWebViewOptions(
       useHybridComposition: true,
@@ -28,25 +29,26 @@ class _WebViewState extends State<WebView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: InAppWebView(
-        key: const Key('webview-todo'),
-        initialUrlRequest: URLRequest(
-            url: Uri.parse("http://127.0.0.1:1234/assets/game/index.html")),
-        // initialUrlRequest: URLRequest(url: Uri.parse("https://google.com")),
-        initialOptions: options,
-        onWebViewCreated: (controller) {
-          webViewController = controller;
-        },
-        onLoadStart: (controller, url) {
-          setState(() {
-            this.url = url.toString();
-          });
-        },
-        androidOnPermissionRequest: (controller, origin, resources) async {
-          return PermissionRequestResponse(
-              resources: resources,
-              action: PermissionRequestResponseAction.GRANT);
-        },
+      body: SafeArea(
+        child: InAppWebView(
+          key: const Key('webview-todo'),
+          initialUrlRequest:
+              URLRequest(url: Uri.parse("http://127.0.0.1:1234/index.html")),
+          initialOptions: options,
+          onWebViewCreated: (controller) {
+            webViewController = controller;
+          },
+          onLoadStart: (controller, url) {
+            setState(() {
+              this.url = url.toString();
+            });
+          },
+          androidOnPermissionRequest: (controller, origin, resources) async {
+            return PermissionRequestResponse(
+                resources: resources,
+                action: PermissionRequestResponseAction.GRANT);
+          },
+        ),
       ),
     );
   }
